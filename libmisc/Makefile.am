@@ -3,7 +3,6 @@ AM_CFLAGS = @CFLAGS@ -I../lib
 AM_LDFLAGS = @LDFLAGS@
 
 
-
 noinst_HEADERS = newopt.h strdup.h trace.h basename.h unix.h mkrdir.h queue.h \
                  dirname.h i18n.h dll.h snprintf.h stm.h stack.h rm.h queue.h \
                  dirstack.h ftw_.h
@@ -14,7 +13,8 @@ libmisc_a_SOURCES = newopt.c strdup.c trace.c basename.c mkrdir.c queue.c \
 		    dirstack.c  ftw_.c
 
 
-EXTRA_DIST = dll.c snprintf.c  dirent_.h dirent.c \
+EXTRA_DIST = dll.c snprintf.c  dirent_.h dirent.c getline.c getline_.h \
+	itoa.c itoa.h Makefile.mine \
 	trio/example.c \
 	trio/Makefile \
 	trio/FILES \
