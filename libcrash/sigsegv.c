@@ -214,7 +214,7 @@ _sigsegv_dump_libc( int (* myprint)(const char *format, ...) )
 }
 
 static void 
-sigsegv_handler_generic(int signal, int full_bt)
+_sigsegv_handler_generic(int signal, int full_bt)
 {	char binary[2048];
 	int pid = getpid();
 	int (* myprint)(const char *format, ...);
@@ -245,12 +245,12 @@ sigsegv_handler_generic(int signal, int full_bt)
 void
 sigsegv_handler_fnc(int signal)
 {
-	sigsegv_handler_generic(signal, 0);
+	_sigsegv_handler_generic(signal, 0);
 }
 
 void
 sigsegv_handler_bt_full_fnc(int signal)
 {
-	sigsegv_handler_generic(signal, 1);
+	_sigsegv_handler_generic(signal, 1);
 }
 
