@@ -26,6 +26,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifndef HAVE_UNISTD_H
+  #include <unix.h>
+#endif
+
 #include "dirstack.h"
 
 int ftw_(const char *path, 
