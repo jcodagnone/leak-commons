@@ -15,8 +15,6 @@ libmisc_a_SOURCES = newopt.c strdup.c trace.c basename.c mkrdir.c queue.c \
 
 
 EXTRA_DIST = dll.c snprintf.c  dirent_.h dirent.c \
-	trio/doc  \
-	trio/html \
 	trio/example.c \
 	trio/Makefile \
 	trio/FILES \
@@ -40,7 +38,7 @@ EXTRA_DIST = dll.c snprintf.c  dirent_.h dirent.c \
 	trio/trio.h \
 	trio/CHANGES \
 	trio/doc/trio.cfg \
-	trio/doc/trio.css 
+	trio/doc/trio.css  \
 	trio/doc/doc.h \
 	trio/doc/doc_register.h \
 	trio/doc/doc_scanf.h \
@@ -49,12 +47,13 @@ EXTRA_DIST = dll.c snprintf.c  dirent_.h dirent.c \
 	trio/doc/footer.html \
 	trio/doc/doc_dynamic.h \
 	trio/doc/header.html  \
+	trio/html/group___dynamic_strings.html \
+	trio/html/group___printf.html \
+	trio/html/group___scanf.html  \
 	trio/html/group___special_quantities.html \
 	trio/html/group___static_strings.html \
-	trio/html/group___scanf.html \
-	trio/html/trio.css  \
-	trio/html/index.html \
-	trio/html/group___user_defined.html \
-	trio/html/group___dynamic_strings.html  \
-	trio/html/group___printf.html \
+	trio/html/group___user_defined.html   \
+	trio/html/index.html  \
+	trio/html/modules.html \
+	trio/html/trio.css \
 	trio/html/modules.html 
