@@ -1,0 +1,19 @@
+.PHONY = all statclib clean co
+
+CFLAGS = -fPIC -I. -I.. -g -Wall -pedantic --pedantic-errors -I.
+
+OBJS =   sigsegv.o
+
+LIBOUT=libcrash.a
+
+all:	staticlib 
+
+staticlib: $(OBJS)
+	$(AR) cr $(LIBOUT) $(OBJS)
+
+clean:
+	- $(RM) -f $(OBJS) $(LIBOUT) 
+
+co:
+	$(CO) RCS/*
+

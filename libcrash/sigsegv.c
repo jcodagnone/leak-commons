@@ -31,9 +31,10 @@ static int needs_cr = 1;
 
 void *
 sigsegv_set_print( int (* fnc)(const char *format, ...), int _needs_cr)
-{	void *ret = print;
+{	void *ret;
 	
-	ret = fnc;
+	ret = &print;
+	print = fnc;
 	needs_cr = _needs_cr;
 
 	return ret;
