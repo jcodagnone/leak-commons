@@ -35,7 +35,7 @@
  * TODO: may be it would be convenient to keep in diferents files the stack 
  * TODO: part and the directories for future reuse of the stack,
  */
-#ifdef HAVE_CONFIG_H_
+#ifdef HAVE_CONFIG_H
  #include <config.h>
 #endif 
 
