@@ -3,7 +3,7 @@
 CFLAGS = -fPIC -I. -I.. -g -Wall -pedantic --pedantic-errors -I.
 
 OBJS =  strdup.o newopt.o trace.o itoa.o basename.o mkrdir.o rm.o \
-	getline.o
+	getline.o dirname.o
 LIBOUT=libmisc.a
 
 all:	staticlib 
