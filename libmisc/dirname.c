@@ -29,7 +29,7 @@ my_path_get_dirname(const char *path)
 
 	p = strrchr(path, '/' ) + 1;
 	if( p -1  == NULL )
-		return strdup(path);
+		return strdup(".");
 
 	for( ; *(p-1) =='/' && p-1!=path  ; p--)
 		;
