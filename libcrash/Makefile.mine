@@ -6,13 +6,15 @@ OBJS =   sigsegv.o
 
 LIBOUT=libcrash.a
 
-all:	staticlib  test1 test2
+all:	staticlib  test1 test2 test3
 
 test1: staticlib
-	$(CC) test1.c -I.. -L. -lpthread -lcrash -o test1
+	$(CC) $(CFLAGS) test1.c -I.. -L. -lpthread -lcrash -o test1
 test2: staticlib
-	$(CC) test2.c -I.. -L. -lpthread -lcrash -o test2
-
+	$(CC) $(CFLAGS) test2.c -I.. -L. -lpthread -lcrash -o test2
+test3: staticlib
+	$(CC) $(CFLAGS) test3.c -I.. -L. -lpthread -lcrash -o test3
+	
 staticlib: $(OBJS)
 	$(AR) cr $(LIBOUT) $(OBJS)
 

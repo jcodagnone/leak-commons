@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifdef HAVE_CONFIG_H_
+#ifdef HAVE_CONFIG_H
   #include <config.h>
 #endif
 
@@ -31,22 +31,30 @@
 #include <errno.h>
 
 #include <unistd.h>
+#include <sys/wait.h>
 
-#include <pthread.h>
+#ifdef HAVE_PTHREAD
+  #include <pthread.h>
+#endif
 
-/*
+/* 
+ * ifdefs can be harmful...but not this time!!
+ *
  * http://www.gnu.org/manual/glibc-2.2.3/html_chapter/libc_33.html
  */
-#if defined(__GLIBC__) && defined(__GLIBC_MINOR__) && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 1
+#if defined(__GLIBC__) && defined(__GLIBC_MINOR__) && __GLIBC__ == 2 && \
+    __GLIBC_MINOR__ >= 1
   #define HAVE_BACKTRACE
   #include <execinfo.h>
 #endif
-#include <sys/wait.h>
 
 
 #include "sigsegv.h"
 
+/** custom print function */
 static int (* print)(const char *format, ...) = NULL;
+
+/** do we need to print the control return at the end? */
 static int needs_cr = 1;
 
 void *
@@ -60,13 +68,14 @@ sigsegv_set_print( int (* fnc)(const char *format, ...), int _needs_cr)
 	return ret;
 }
 
+/**************************************************************************/
+
 /**
- * intenta lanzar el gdb, y mostrar el backtrace
+ * lunch gdb, and print the backtrace
  */
 static int
-dump_pid_son(pid_t pid, const char *binary, int full_bt, 
-             int (* myprint)(const char *format,
-...))
+_sigsegv_dump_gdb_real(pid_t pid, const char *binary, int full_bt, 
+                       int (* myprint)(const char *format, ...))
 {	char tmp[]="/tmp/mrbug-crash-XXXXXX";
 	int ret = 0;
 	int fd;
@@ -89,8 +98,10 @@ dump_pid_son(pid_t pid, const char *binary, int full_bt,
 			write(fd, gdb_cmd, strlen(gdb_cmd));
 		close(fd);
 	
-		sprintf(cmd, "gdb -nw -n -batch -x \"%s\" %s %d", tmp, binary,
-		        pid);
+		/* i'm too lazy */
+		snprintf(cmd, sizeof(cmd), "gdb -nw -n -batch -x \"%s\" %s %d",
+		         tmp, binary, pid);
+		cmd[sizeof(cmd)-1]=0;
 		(*myprint)("trying to dump pid: %d (%s)...%s", pid, binary,
 		            needs_cr ? "\n" : "");
 
@@ -123,7 +134,7 @@ dump_pid_son(pid_t pid, const char *binary, int full_bt,
 }
 
 static int
-dump_pid(pid_t pid, const char *binary, int full_bt )
+_sigsegv_dump_gdb(pid_t pid, const char *binary, int full_bt )
 {	pid_t mpid;
 	int (* myprint)(const char *format, ...);
 
@@ -134,7 +145,7 @@ dump_pid(pid_t pid, const char *binary, int full_bt )
 	 */
 	mpid = fork();
 	if( mpid == 0 )
-	{	dump_pid_son(pid, binary, full_bt,  myprint);
+	{	_sigsegv_dump_gdb_real(pid, binary, full_bt,  myprint);
 		exit(0);
 	}
 	else if( mpid == -1 )
@@ -181,13 +192,15 @@ get_path_from_pid(char *buff, size_t nbuff, pid_t pid)
 
 
 static void
-sigsegv_libc_dump( int (* myprint)(const char *format, ...) )
-{ 	void *array[48] = {0};
+_sigsegv_dump_libc( int (* myprint)(const char *format, ...) )
+{
+#ifdef HAVE_BACKTRACE
+	void *array[48] = {0};
 	unsigned short i;
 	int n;
 	char **res;
 
-#ifdef HAVE_BACKTRACE
+
 	(*myprint)("Backtrace:%c", needs_cr ? "\n" : "");
  	n  = backtrace(array, sizeof(array)/(sizeof(*array)));
 	res =  backtrace_symbols(array, n);
@@ -196,7 +209,7 @@ sigsegv_libc_dump( int (* myprint)(const char *format, ...) )
 
 	(*myprint)("Attempting to generate core file%s",
 	           needs_cr ? "" : "");
-	#endif
+#endif
 
 }
 
@@ -212,12 +225,19 @@ sigsegv_handler_generic(int signal, int full_bt)
         else 
 	{ 	(*myprint)("Segmentation Violation Detected.%s", 
 		           needs_cr ? "\n" : "");
-		dump_pid(pid, binary, full_bt);
-		sigsegv_libc_dump(myprint);
+		_sigsegv_dump_gdb(pid, binary, full_bt);
+		_sigsegv_dump_libc(myprint);
 		
 	}
 	
-	pthread_kill_other_threads_np();
+	#ifdef HAVE_PTHREAD
+	  /** in multithreads programs, chances are that you don't get a core 
+	   *  dump unless you stop all the others threads. i don't remember the
+	   *  exact cause.
+	   */
+	   pthread_kill_other_threads_np();
+	#endif
+	
 	fflush(NULL);
 	abort();
 }

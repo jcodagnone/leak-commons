@@ -26,7 +26,10 @@
 
 /**
  * sets the print function (it is used to print the backtrace)
+ *
  * if it isn't set, or it is set to NULL, printf will be used.
+ *
+ * try to use a simple function. heap can be corrupted...
  *
  * \param  _need_cr    needs to append an \n at the end?
  */
