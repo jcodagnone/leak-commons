@@ -1,3 +1,6 @@
+/*
+ * should print a full backtrace 
+ */
 #include <signal.h>
 #include <libcrash/sigsegv.h>
 

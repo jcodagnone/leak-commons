@@ -1,3 +1,7 @@
+/* 
+ * should print a simple backtrace with a custom print function (prints -> at
+ * the begining of each line
+ */
 #include <stdio.h>
 #include <stdarg.h>
 #include <signal.h>
