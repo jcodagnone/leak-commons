@@ -1,3 +1,25 @@
+/* sigsegv.c -- sigsegv handlers 
+ *
+ * Copyright (c) 2003 Juan F. Codagnone <juam@users.sourceforge.net>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a 
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included 
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 #ifdef HAVE_CONFIG_H_
   #include <config.h>
 #endif
@@ -10,9 +32,7 @@
 
 #include <unistd.h>
 
-#ifdef HAVE_PTHREAD_H
-  #include <pthread.h>
-#endif
+#include <pthread.h>
 
 /*
  * http://www.gnu.org/manual/glibc-2.2.3/html_chapter/libc_33.html
@@ -199,9 +219,7 @@ sigsegv_handler_generic(int signal, int full_bt)
 		
 	}
 	
-	#ifdef HAVE_PTHREAD_H
-		pthread_kill_other_threads_np();
-	#endif
+	pthread_kill_other_threads_np();
 	fflush(NULL);
 	abort();
 }
