@@ -73,8 +73,8 @@ dump_pid_son(pid_t pid, const char *binary, int full_bt,
 
 	fd = mkstemp(tmp);
 	if( fd == -1 )
-	{	(*myprint)("opening gdb command (tempory) file `%s'%c", tmp,
-		           needs_cr ? '\n' : '\0');
+	{	(*myprint)("opening gdb command (tempory) file `%s'%s", tmp,
+		           needs_cr ? "\n" : "");
 		ret = -1;
 	}
 	else
@@ -91,14 +91,14 @@ dump_pid_son(pid_t pid, const char *binary, int full_bt,
 	
 		sprintf(cmd, "gdb -nw -n -batch -x \"%s\" %s %d", tmp, binary,
 		        pid);
-		(*myprint)("trying to dump pid: %d (%s)...%c", pid, binary,
-		            needs_cr ? '\n' : '\0');
+		(*myprint)("trying to dump pid: %d (%s)...%s", pid, binary,
+		            needs_cr ? "\n" : "");
 
 		fflush(NULL);
 		fp = popen(cmd, "r");
 		if( fp == NULL )
-		{	(*myprint)("err. couldn't exec `%s'%c", cmd,
-			           needs_cr ? '\n' : '\0');
+		{	(*myprint)("err. couldn't exec `%s'%s", cmd,
+			           needs_cr ? "\n" : "");
 			ret = -1;
 		}
 		else
@@ -110,13 +110,13 @@ dump_pid_son(pid_t pid, const char *binary, int full_bt,
 				if( buff[len-1] == '\n')
 					buff[len-1]=0;
 					
-				(*myprint)("%s%c", buff,needs_cr ? '\n' : '\0');
+				(*myprint)("%s%s", buff,needs_cr ? "\n" : "");
 			}
 			fclose(fp);
 		}
 		if( remove(tmp) == -1 )
-			(*myprint)("removing `%s` (@;@)%c", tmp,
-			           needs_cr ? '\n' : '\0');
+			(*myprint)("removing `%s` (@;@)%s", tmp,
+			           needs_cr ? "\n" : "");
 	}
 
 	return ret;
@@ -138,8 +138,8 @@ dump_pid(pid_t pid, const char *binary, int full_bt )
 		exit(0);
 	}
 	else if( mpid == -1 )
-		(*myprint)("lunching son: `%s' %c", strerror(errno),
-		           needs_cr ? '\n' : '\0');
+		(*myprint)("lunching son: `%s' %s", strerror(errno),
+		           needs_cr ? "\n" : "");
 	else
 	{	/* father */
 		int status;
@@ -190,14 +190,14 @@ sigsegv_libc_dump( int (* myprint)(const char *format, ...) )
 	char **res;
 
 #ifdef HAVE_BACKTRACE
-	(*myprint)("Backtrace:%c", needs_cr ? '\n' : '\0');
+	(*myprint)("Backtrace:%c", needs_cr ? "\n" : "");
  	n  = backtrace(array, sizeof(array)/(sizeof(*array)));
 	res =  backtrace_symbols(array, n);
 	for (i = 0; i < n; i++)
-		(*myprint)("%s%c", res[i], needs_cr ? '\n' : '\0');
+		(*myprint)("%s%s", res[i], needs_cr ? "\n" : "");
 
-	(*myprint)("Attempting to generate core file%c",
-	           needs_cr ? '\n' : '\0');
+	(*myprint)("Attempting to generate core file%s",
+	           needs_cr ? "" : "");
 	#endif
 
 }
@@ -212,8 +212,8 @@ sigsegv_handler_generic(int signal, int full_bt)
 	if( get_path_from_pid(binary, sizeof(binary), pid) == NULL)
                	(*myprint)("pid %d does not seems to exist", pid);
         else 
-	{ 	(*myprint)("Segmentation Violation Detected.%c", 
-		           needs_cr ? '\n':'\0');
+	{ 	(*myprint)("Segmentation Violation Detected.%s", 
+		           needs_cr ? "\n" : "");
 		dump_pid(pid, binary, full_bt);
 		sigsegv_libc_dump(myprint);
 		
