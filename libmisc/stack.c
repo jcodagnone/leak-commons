@@ -12,8 +12,7 @@ struct stackCDT
 
 stack_t
 stack_new(void)
-{	struct stack_node *list;
-	stack_t s;
+{	stack_t s;
 
 	s    = malloc(sizeof(*s));
 	if( s )
