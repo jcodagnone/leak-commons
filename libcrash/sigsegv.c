@@ -154,15 +154,13 @@ dump_pid(pid_t pid, const char *binary, int full_bt )
 }
 
 /** 
- * obtiene el path del programa que creo el proceso con pid `pid'
+ * gets the pathname for the binary that has created the `pid' process
  *
- * \param buff     buffer donde se escribe el path
- * \param nbuff    tamaño maximo del buffer
- * \param pid      pid del proceso a buscar
+ * \param buff     output buffer (where the path is written)
+ * \param nbuff    size of the output buffer
+ * \param pid      process id to search for
  *
- * \note Esta funcion solo funciona en Linux
- *
- * \return el parametro buff
+ * \return buff param
  */
 static char *
 get_path_from_pid(char *buff, size_t nbuff, pid_t pid)
