@@ -1,6 +1,6 @@
 .PHONY = all statclib clean co
 
-CFLAGS = -fPIC -I. -I.. -g -Wall -pedantic --pedantic-errors -I.
+CFLAGS = -fPIC -I. -I.. -g -Wall -pedantic  -I.
 
 OBJS =  strdup.o newopt.o trace.o itoa.o basename.o mkrdir.o rm.o \
 	getline.o dirname.o
